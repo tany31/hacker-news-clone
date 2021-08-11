@@ -1,0 +1,24 @@
+@use "sass:math";
+
+$--orange: #fc6602;
+$--white: #ffffff;
+$--gray: #e8e8e8;
+
+$--primary: $--orange;
+
+$--font-family: 'SourceSansPro', sans-serif;
+$--font-weight-semiBold: 600;
+$--font-weight-normal: 400;
+
+$--font-size-small: 10px;
+$--font-size-base: 16px;
+$--font-size-medium: 20px;
+$--font-size-title: 28px;
+$--font-size-subtitle: 20px;
+
+$--content-width: 800px;
+
+$--gutter: 16px;
+$--gutter-sm: math.div($--gutter, 2);
+$--gutter-md: $--gutter * 1.5;
+$--gutter-lg: $--gutter * 2;
