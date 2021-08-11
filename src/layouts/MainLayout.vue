@@ -28,11 +28,12 @@ export default {
   }
 
   &__content {
+    margin: $--gutter-md;
     background: $--white;
     max-width: $--content-width;
     width: 100%;
-    padding: $--gutter;
     box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 15%);
+    border-radius: 5px;
   }
 }
 </style>

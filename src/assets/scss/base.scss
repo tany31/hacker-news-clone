@@ -12,6 +12,14 @@ h1, p {
   margin: 0;
 }
 
+a {
+  color: inherit;
+
+  &:hover {
+    color: $--primary;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
