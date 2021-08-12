@@ -4,9 +4,14 @@
     <div class="news-item__content">
       <p class="news-item__title">
         {{ title }}
-        <a class="news-item__link" :href="url" target="_blank"><icon-new-tab class="news-item__link-icon" /></a>
+        <a v-if="url" class="news-item__link" :href="url" target="_blank"
+          ><icon-new-tab class="news-item__link-icon"
+        /></a>
       </p>
-      <small class="news-item__subtitle">by {{ by }} | {{ time }} ago | {{ descendants }} comments</small>
+      <small class="news-item__subtitle"
+        >by <router-link :to="{ name: 'User', params: { username: by } }">{{ by }}</router-link> | {{ time }} ago |
+        <router-link :to="{ name: 'NewsDetails', params: { id } }">{{ descendants }} comments</router-link></small
+      >
     </div>
   </div>
 </template>
@@ -18,6 +23,7 @@ export default {
   name: 'NewsItem',
   components: { IconNewTab },
   props: {
+    id: { type: Number, required: true },
     by: { type: String, default: '' },
     descendants: { type: Number, default: 0 },
     score: { type: Number, default: 0 },

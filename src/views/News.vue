@@ -3,16 +3,22 @@
     <base-loader v-show="loading" />
     <news-item
       v-for="item in news"
+      :id="item.id"
       :key="item.id"
       :score="item.score"
       :by="item.by"
       :time="item.time"
       :title="item.title"
-      :utl="item.url"
+      :url="item.url"
       :descendants="item.descendants"
     />
 
-    <base-pagination :page="page" :total-count="totalPageCount" :page-length="10" @update-page="updatePage" />
+    <base-pagination
+      :page="page"
+      :total-count="totalPageCount"
+      :page-length="$options.PAGE_LENGTH"
+      @update-page="updatePage"
+    />
   </div>
 </template>
 
@@ -27,6 +33,7 @@ const PAGE_LENGTH = 10;
 
 export default {
   name: 'News',
+  PAGE_LENGTH,
   components: { BasePagination, BaseLoader, NewsItem },
   props: {
     type: { type: String, required: true },

@@ -16,6 +16,18 @@ const routes = [
         props: route => ({ ...route.params }),
         component: () => import(/* webpackChunkName: "News" */ '@/views/News.vue'),
       },
+      {
+        path: '/item/:id',
+        name: 'NewsDetails',
+        props: route => ({ ...route.params }),
+        component: () => import(/* webpackChunkName: "NewsDetails" */ '@/views/NewsDetails.vue'),
+      },
+      {
+        path: '/user/:username',
+        name: 'User',
+        props: route => ({ ...route.params }),
+        component: () => import(/* webpackChunkName: "User" */ '@/views/User.vue'),
+      },
     ],
   },
 ];
