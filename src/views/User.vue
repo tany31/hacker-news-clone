@@ -6,7 +6,7 @@
 export default {
   name: 'User',
   props: {
-    username: { type: Number, required: true },
+    username: { type: String, required: true },
   },
 };
 </script>

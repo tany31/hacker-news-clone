@@ -2,9 +2,7 @@
   <div class="main-layout">
     <the-header />
     <main class="main-layout__main">
-      <div class="main-layout__content">
-        <router-view />
-      </div>
+      <router-view />
     </main>
   </div>
 </template>
@@ -25,15 +23,6 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-
-  &__content {
-    margin: $--gutter-md;
-    background: $--white;
-    max-width: $--content-width;
-    width: 100%;
-    box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 15%);
-    border-radius: 5px;
   }
 }
 </style>
