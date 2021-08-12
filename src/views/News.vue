@@ -1,5 +1,6 @@
 <template>
   <div class="news">
+    <base-loader v-show="loading" />
     <news-item
       v-for="item in news"
       :key="item.id"
@@ -15,17 +16,20 @@
 
 <script>
 import NewsItem from '@/components/News/NewsItem.vue';
+import BaseLoader from '@/components/common/BaseLoader.vue';
+
 import newsService from '@/services/news';
 
 export default {
   name: 'News',
-  components: { NewsItem },
+  components: { NewsItem, BaseLoader },
   props: {
     type: { type: String, required: true },
   },
   data() {
     return {
       news: [],
+      loading: false,
     };
   },
 
@@ -41,10 +45,12 @@ export default {
 
   methods: {
     fetchNews() {
+      this.loading = true;
       return newsService
         .fetchList(this.type)
-        .then(ids => newsService.fetchItems(ids.slice(0, 10)))
-        .then(news => (this.news = news));
+        .then(ids => newsService.fetchItems(ids.slice(0, 20)))
+        .then(news => (this.news = news.filter(n => n)))
+        .finally(() => (this.loading = false));
     },
   },
 };
