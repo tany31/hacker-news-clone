@@ -13,6 +13,7 @@ const routes = [
       {
         path: '/:type',
         name: 'News',
+        props: route => ({ ...route.params }),
         component: () => import(/* webpackChunkName: "News" */ '@/views/News.vue'),
       },
     ],
