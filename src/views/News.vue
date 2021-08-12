@@ -11,30 +11,44 @@
       :utl="item.url"
       :descendants="item.descendants"
     />
+
+    <base-pagination :page="page" :total-count="totalPageCount" :page-length="10" @update-page="updatePage" />
   </div>
 </template>
 
 <script>
-import NewsItem from '@/components/News/NewsItem.vue';
 import BaseLoader from '@/components/common/BaseLoader.vue';
+import BasePagination from '@/components/common/BasePagination.vue';
+import NewsItem from '@/components/News/NewsItem.vue';
 
 import newsService from '@/services/news';
 
+const PAGE_LENGTH = 10;
+
 export default {
   name: 'News',
-  components: { NewsItem, BaseLoader },
+  components: { BasePagination, BaseLoader, NewsItem },
   props: {
     type: { type: String, required: true },
   },
   data() {
     return {
+      ids: [],
       news: [],
+
+      page: 1,
       loading: false,
     };
+  },
+  computed: {
+    totalPageCount() {
+      return Math.ceil(this.ids.length / PAGE_LENGTH);
+    },
   },
 
   watch: {
     type() {
+      this.page = 1;
       this.fetchNews();
     },
   },
@@ -46,11 +60,29 @@ export default {
   methods: {
     fetchNews() {
       this.loading = true;
-      return newsService
-        .fetchList(this.type)
-        .then(ids => newsService.fetchItems(ids.slice(0, 20)))
-        .then(news => (this.news = news.filter(n => n)))
+      this.fetchNewsIds()
+        .then(() => this.fetchNewsPage())
         .finally(() => (this.loading = false));
+    },
+
+    fetchNewsPage() {
+      this.loading = true;
+      const startId = (this.page - 1) * PAGE_LENGTH;
+      const endId = this.page * PAGE_LENGTH;
+
+      return newsService
+        .fetchItems(this.ids.slice(startId, endId))
+        .then(news => (this.news = news))
+        .finally(() => (this.loading = false));
+    },
+
+    fetchNewsIds() {
+      return newsService.fetchList(this.type).then(ids => (this.ids = ids));
+    },
+
+    updatePage(page) {
+      this.page = page;
+      this.fetchNewsPage();
     },
   },
 };

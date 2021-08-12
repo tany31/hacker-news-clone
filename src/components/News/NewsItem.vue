@@ -38,6 +38,7 @@ export default {
   }
 
   &__score {
+    flex-shrink: 0;
     width: 40px;
     display: flex;
     justify-content: center;
