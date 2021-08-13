@@ -1,5 +1,6 @@
 <template>
   <div class="news-details">
+    <base-loader v-show="loading" />
     <div class="news-details__main">
       <div class="news-details__content">
         <div class="news-details__headline">
@@ -15,12 +16,7 @@
         <div class="news-details__comments">
           <p>Comments {{ story.descendants }}</p>
           <base-divider />
-          <template v-for="(comment, i) in comments">
-            <div :key="comment.id" class="news-details__comment">
-              <news-comment v-bind="comment" />
-            </div>
-            <base-divider :key="i" />
-          </template>
+          <CommentList v-if="story.kids" :comments="story.comments" />
         </div>
       </div>
     </div>
@@ -28,15 +24,16 @@
 </template>
 
 <script>
+import BaseLoader from '@/components/common/BaseLoader.vue';
 import BaseDivider from '@/components/common/BaseDivider.vue';
 import NewsScore from '@/components/News/Score.vue';
-import NewsComment from '@/components/News/Comment.vue';
+import CommentList from '@/components/News/CommentList.vue';
 
 import newsService from '@/services/news';
 
 export default {
   name: 'NewsDetails',
-  components: { BaseDivider, NewsScore, NewsComment },
+  components: { BaseLoader, BaseDivider, NewsScore, CommentList },
   props: {
     id: { type: [Number, String], required: true },
   },
@@ -44,24 +41,39 @@ export default {
     return {
       story: {},
       comments: [],
+
+      loading: false,
     };
   },
 
   created() {
-    this.fetchStory().then(() => {
-      this.fetchComments();
-    });
+    this.loading = true;
+    this.fetchStory()
+      .then(() => this.fetchComments(this.story.kids))
+      .then(comments => {
+        this.story.comments = comments;
+      })
+      .finally(() => (this.loading = false));
   },
+
   methods: {
     fetchStory() {
       return newsService.fetchItem(this.id).then(story => (this.story = story));
     },
 
-    fetchComments() {
-      const commentsId = this.story.kids;
-      if (commentsId && commentsId.length) {
-        return newsService.fetchItems(commentsId).then(comments => (this.comments = comments));
+    fetchComments(kids) {
+      if (kids) {
+        return Promise.all(
+          kids.map(async kid => {
+            const comment = await newsService.fetchItem(kid);
+            const children = await this.fetchComments(comment.kids);
+
+            return children.length ? { ...comment, comments: children } : comment;
+          })
+        );
       }
+
+      return Promise.resolve([]);
     },
   },
 };

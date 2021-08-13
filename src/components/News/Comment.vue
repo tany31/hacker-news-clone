@@ -6,7 +6,15 @@
       </router-link>
       {{ new Date(time * 1000).toLocaleString() }}
     </small>
+    <!-- eslint-disable-next-line -->
     <p v-html="text"></p>
+
+    <template v-if="comments && comments.length">
+      <button class="news-comment__show-button" @click="isHiddenComments = !isHiddenComments">
+        {{ isHiddenComments ? `[ + ${comments.length} more]` : '[ - ]' }}
+      </button>
+      <CommentList v-if="!isHiddenComments" class="news-comment__replies" :comments="comments" />
+    </template>
   </div>
 </template>
 
@@ -14,9 +22,23 @@
 export default {
   name: 'Comment',
   props: {
-    by: { type: String, required: true },
+    by: { type: String, default: '' },
     time: { type: Number, required: true },
-    text: { type: String, required: true },
+    text: { type: String, default: '' },
+    comments: { type: Array, default: () => [] },
+  },
+
+  data() {
+    return {
+      isHiddenComments: false,
+    };
+  },
+  beforeCreate: function () {
+    this.$options.components.CommentList = require('./CommentList.vue').default;
+  },
+
+  methods: {
+    showComments() {},
   },
 };
 </script>
@@ -25,6 +47,21 @@ export default {
 .news-comment {
   &__details {
     color: $--dark-gray;
+  }
+
+  &__replies {
+    padding-left: 1rem;
+  }
+
+  &__show-button {
+    background: none;
+    border: none;
+    color: $--dark-gray;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 </style>
