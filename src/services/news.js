@@ -12,4 +12,8 @@ export default {
   fetchItem(id) {
     return client.get(`/item/${id}.json`);
   },
+
+  fetchUser(username) {
+    return client.get(`/user/${username}.json`);
+  },
 };
