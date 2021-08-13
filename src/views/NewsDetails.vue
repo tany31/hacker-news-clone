@@ -107,10 +107,6 @@ export default {
     padding: $--gutter;
   }
 
-  &__comment {
-    margin: $--gutter 0;
-  }
-
   &__title {
     font-size: $--font-size-subtitle;
   }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <template v-for="comment in comments">
-      <div :key="comment.id" class="news-details__comment">
+      <div v-if="comment && !comment.deleted" :key="comment.id" class="news-details__comment">
         <comment v-bind="comment" />
       </div>
     </template>
